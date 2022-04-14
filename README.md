@@ -1,0 +1,2 @@
+# cakephp-settings
+Customizable Settings

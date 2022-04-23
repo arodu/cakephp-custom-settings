@@ -1,2 +1,3 @@
-# cakephp-settings
+# CustomSettings: CakePHP Plugin
+
 Customizable Settings

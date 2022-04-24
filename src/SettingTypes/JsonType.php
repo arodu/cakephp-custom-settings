@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace CustomSettings\Types;
+namespace CustomSettings\SettingTypes;
 
 use CustomSettings\Exception\InvalidSettingTypeException;
 
@@ -9,6 +9,9 @@ class JsonType extends AbstractSettingType
 {
     protected $_lastError = null;
 
+    /**
+     * @inheritDoc
+     */
     public function saveValue(mixed $input_value): string
     {
         if (empty($input_value)) {
@@ -16,12 +19,15 @@ class JsonType extends AbstractSettingType
         }
 
         if ($this->isJson($input_value)) {
-            return $input_value;
+            return json_encode(json_decode($input_value));
         }
 
         throw new InvalidSettingTypeException($this->errorMessage());
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getValue(string $raw_value): mixed
     {
         if (empty($raw_value)) {
@@ -31,6 +37,9 @@ class JsonType extends AbstractSettingType
         return json_decode($raw_value, true);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function stringValue(?string $raw_value): string
     {
         return json_encode($this->getValue($raw_value), JSON_PRETTY_PRINT) ?? '';

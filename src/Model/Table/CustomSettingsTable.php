@@ -13,7 +13,7 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use CustomSettings\CustomSettings;
 use CustomSettings\Model\Entity\CustomSetting;
-use CustomSettings\Types\TypeFactory;
+use CustomSettings\SettingTypes\TypeFactory;
 use InvalidArgumentException;
 
 /**
@@ -90,14 +90,19 @@ class CustomSettingsTable extends Table
         return $validator;
     }
 
-    public function findName(Query $query, array $options = []): Query
+    public function findByName(Query $query, array $options = []): Query
     {
         if (empty($options['name'])) {
             throw new InvalidArgumentException('The method "findName" expects to receive "name" in $options array');
         }
-
         $query->where([$this->aliasField('name') => $options['name']]);
+        $query->find('category', $options);
 
+        return $query;
+    }
+
+    public function findByCategory(Query $query, array $options = []): Query
+    {
         if (empty($options['category'])) {
             $query->whereNull(['category']);
         } else {
@@ -105,6 +110,17 @@ class CustomSettingsTable extends Table
         }
 
         return $query;
+    }
+
+    //public function getCategories(): array
+    public function findOnlyCategories(Query $query, array $options = []): Query
+    {
+        return $query
+            ->select([$this->aliasField('category')])
+            ->distinct($this->aliasField('category'))
+            ->find('list', [
+                'valueField' => 'category',
+            ]);
     }
 
     /**
@@ -118,5 +134,9 @@ class CustomSettingsTable extends Table
     public function afterMarshal(EventInterface $event, EntityInterface $entity, ArrayObject $options)
     {
         $entity->raw_value = $entity->typeObject()->saveValue($options['value']);
+        
+        if (empty($entity->category)) {
+            $entity->category = null;
+        }
     }
 }

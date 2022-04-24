@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace CustomSettings;
 
+use Cake\Collection\Collection;
 use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
@@ -25,6 +26,9 @@ class CustomSettings
         'options' => [],
     ];
 
+    /**
+     * @return array
+     */
     public static function getTypeLabels(): array
     {
         $list = Configure::read('CustomSettings');
@@ -37,19 +41,28 @@ class CustomSettings
     }
     
     /**
-     * @param string $name
+     * @param string|null $name
      * @param string|null $category
-     * @return EntityInterface|null
+     * @return EntityInterface|array|null
      */
-    public static function read(string $name, ?string $category = null): ?EntityInterface
+    public static function read(?string $name = null, ?string $category = null, $getEntity = false): mixed
     {
+        if (empty($name)) {
+            return static::readAll();
+        }
+
         $CustomSettings = TableRegistry::getTableLocator()->get('CustomSettings.CustomSettings');
-        
-        return $CustomSettings->find('name', [
-                'name' => $name,
-                'category' => $category,
+        $entity = $CustomSettings->find('byName', [
+            'name' => $name,
+            'category' => $category,
             ])
             ->first();
+
+        if ($getEntity) {
+            return $entity;
+        }
+
+        return $entity->toArray();
     }
 
 
@@ -87,13 +100,51 @@ class CustomSettings
         $CustomSettings = TableRegistry::getTableLocator()->get('CustomSettings.CustomSettings');
         $data = array_merge(static::DEFAULT_DATA, $data);
 
-        if ($entity = static::read($data['name'], $data['category'])) {
+        if ($entity = static::read($data['name'], $data['category'], true)) {
             return $CustomSettings->patchEntity($entity, $data);
         }
 
         return $CustomSettings->newEntity($data);
     }
 
-    // @todo
-	//public static function category($category=null): array<EntityInterface>
+    /**
+     * @param string|null $category
+     * @return array
+     */
+    public static function readAll(): array
+    {
+        $CustomSettings = TableRegistry::getTableLocator()->get('CustomSettings.CustomSettings');
+        $entities = $CustomSettings->find();
+
+        $output = [];
+        foreach ($entities as $item) {
+            $output[$item->alias] = $item->toArray();
+        }
+
+        return $output;
+    }
+
+    /**
+     * @param string|null $category
+     * @return array
+     */
+	public static function category(?string $category = null): array
+    {
+        $CustomSettings = TableRegistry::getTableLocator()->get('CustomSettings.CustomSettings');
+        $entities = $CustomSettings->find('byCategory', ['category' => $category]);
+
+        $output = [];
+        foreach ($entities as $item) {
+            $output[$item->alias] = $item->toArray();
+        }
+
+        return $output;
+    }
+
+    public static function categories(): array
+    {
+        $CustomSettings = TableRegistry::getTableLocator()->get('CustomSettings.CustomSettings');
+        
+        return $CustomSettings->find('onlyCategories')->toList();
+    }
 }

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace CustomSettings\Types;
+namespace CustomSettings\SettingTypes;
 
 use Cake\Core\Configure;
 use CustomSettings\CustomSettings;

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace CustomSettings\Model\Entity;
 
 use CustomSettings\CustomSettings;
-use CustomSettings\Types\SettingTypeInterface;
-use CustomSettings\Types\SettingTypeFactory;
+use CustomSettings\SettingTypes\SettingTypeInterface;
+use CustomSettings\SettingTypes\SettingTypeFactory;
 
 trait TypesTrait
 {
@@ -43,9 +43,18 @@ trait TypesTrait
     protected function _getStringValue(): string
     {
         if (empty($this->raw_value)) {
-            return null;
+            return '';
         }
 
         return $this->typeObject()->stringValue($this->raw_value);
+    }
+
+    protected function _getAlias(): string
+    {
+        if (empty($this->category)) {
+            return $this->name;
+        }
+
+        return sprintf('%s.%s', $this->category, $this->name);
     }
 }

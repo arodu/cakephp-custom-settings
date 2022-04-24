@@ -22,6 +22,10 @@ class CustomSetting extends Entity
 {
     use TypesTrait;
 
+    protected $_virtual = ['value', 'string_value', 'alias'];
+
+    protected $_hidden = ['raw_value', 'options', 'created', 'modified', 'id'];
+
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *

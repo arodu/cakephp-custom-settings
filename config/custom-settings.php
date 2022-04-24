@@ -4,11 +4,11 @@ return [
     'CustomSettings' => [
         \CustomSettings\CustomSettings::TYPE_STRING => [
             'label' => __('String'),
-            'class' => \CustomSettings\Types\StringType::class,
+            'class' => \CustomSettings\SettingTypes\StringType::class,
         ],
         \CustomSettings\CustomSettings::TYPE_JSON => [
             'label' => __('JSON'),
-            'class' => \CustomSettings\Types\JsonType::class,
+            'class' => \CustomSettings\SettingTypes\JsonType::class,
         ],
     ],
 ];

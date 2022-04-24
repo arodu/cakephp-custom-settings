@@ -59,9 +59,10 @@ class CustomSettingsController extends AppController
 
                 return $this->redirect(['action' => 'index']);
             } catch (DuplicateRegistryException $e) {
-                $this->Flash->error($e->getMessage());
+                $customSetting->setError('name', $e->getMessage());
             } catch (InvalidSettingTypeException $e) {
-                $this->Flash->error($e->getMessage());
+                $customSetting->invalid_value = $this->request->getData('value');
+                $customSetting->setError('value', $e->getMessage());
             }
             $this->Flash->error(__('The custom setting could not be saved. Please, try again.'));
         }
@@ -81,17 +82,21 @@ class CustomSettingsController extends AppController
             'contain' => [],
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $customSetting = $this->CustomSettings->patchEntity($customSetting, $this->request->getData());
-            if ($this->CustomSettings->save($customSetting)) {
-                $this->Flash->success(__('The custom setting has been saved.'));
+            try {
+                $customSetting = $this->CustomSettings->patchEntity($customSetting, $this->request->getData());
+                CustomSettings::write($customSetting, true);
+                $this->Flash->success(__('The custom setting has been edited.'));
 
                 return $this->redirect(['action' => 'index']);
+            } catch (DuplicateRegistryException $e) {
+                $customSetting->setError('name', $e->getMessage());
+            } catch (InvalidSettingTypeException $e) {
+                $customSetting->invalid_value = $this->request->getData('value');
+                $customSetting->setError('value', $e->getMessage());
             }
             $this->Flash->error(__('The custom setting could not be saved. Please, try again.'));
         }
         $this->set(compact('customSetting'));
-
-        $this->render('add');
     }
 
     /**

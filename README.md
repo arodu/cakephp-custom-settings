@@ -23,6 +23,24 @@ Or you can manually add the loading statement in the `src/Application.php` file 
 ```php
 public function bootstrap(){
     parent::bootstrap();
-    $this->addPlugin('CustomSettings');
+    //...
+    $this->addPlugin(\CustomSettings\Plugin::class);
 }
+```
+
+Load table database
+```bash
+bin/cake migrations migrate -p CustomSettings
+```
+
+## Usage
+
+```php
+use CustomSettings\CustomSettings;
+
+CustomSettings::read(string $name, ?string $category = null): ?EntityInterface;
+CustomSettings::write(EntityInterface|array $entity, bool $merge = true): EntityInterface|bool;
+
+CustomSettings::getEntity(array $data): EntityInterface;
+CustomSettings::getTypeLabels(): array
 ```

@@ -25,7 +25,7 @@ class CustomSettings
         'options' => [],
     ];
 
-    public static function getTypeLabels()
+    public static function getTypeLabels(): array
     {
         $list = Configure::read('CustomSettings');
         $output = [];

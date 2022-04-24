@@ -56,14 +56,14 @@ class CustomSettingsController extends AppController
             try {
                 CustomSettings::write($this->request->getData(), false);
                 $this->Flash->success(__('The custom setting has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } catch (DuplicateRegistryException $e) {
                 $this->Flash->error($e->getMessage());
             } catch (InvalidSettingTypeException $e) {
                 $this->Flash->error($e->getMessage());
-            } finally {
-                $this->Flash->error(__('The custom setting could not be saved. Please, try again.'));
             }
+            $this->Flash->error(__('The custom setting could not be saved. Please, try again.'));
         }
         $this->set(compact('customSetting'));
     }

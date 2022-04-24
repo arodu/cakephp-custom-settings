@@ -10,7 +10,6 @@ use Cake\Http\MiddlewareQueue;
 use Cake\Routing\RouteBuilder;
 use Cake\Console\CommandCollection;
 use Cake\Core\Configure;
-use Cake\Http\Exception\NotFoundException;
 
 /**
  * Plugin for CustomSettings
@@ -29,12 +28,9 @@ class Plugin extends BasePlugin
     public function bootstrap(PluginApplicationInterface $app): void
     {
         try {
-            Configure::load('custom-settings');
-        } catch (\Cake\Core\Exception\CakeException $e) {
             Configure::load('CustomSettings.custom-settings');
-        } catch (\Exception $e) {
-            throw new NotFoundException('custom-settings file not found!');
-        }
+            Configure::load('custom-settings');
+        } catch (\Exception $e) {}
 
         parent::bootstrap($app);
     }

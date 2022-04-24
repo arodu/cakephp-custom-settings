@@ -13,6 +13,7 @@ use CustomSettings\CustomSettings;
     <h3><?= __('Edit Custom Setting') ?></h3>
     <div>
         <?= $this->Form->create($customSetting) ?>
+        <?= $this->Form->control('category', ['disabled' => true]) ?>
         <?= $this->Form->control('name', ['disabled' => true]) ?>
         <?= $this->Form->control('type', [
             'options' => CustomSettings::getTypeLabels(),
@@ -23,7 +24,7 @@ use CustomSettings\CustomSettings;
             'type' => 'textarea',
             'value' => $customSetting->invalid_value ?? $customSetting->string_value,
         ]) ?>
-        <?= $this->Form->control('category', ['disabled' => true]) ?>
+        <?= $this->Form->control('can_delete') ?>
         <?= $this->Form->button(__('Submit')) ?>
         <?= $this->Form->end() ?>
     </div>

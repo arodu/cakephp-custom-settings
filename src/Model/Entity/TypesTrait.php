@@ -49,7 +49,7 @@ trait TypesTrait
         return $this->typeObject()->stringValue($this->raw_value);
     }
 
-    protected function _getAlias(): string
+    protected function _getAlias(): ?string
     {
         if (empty($this->category)) {
             return $this->name;

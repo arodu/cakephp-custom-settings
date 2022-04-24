@@ -12,6 +12,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use CustomSettings\CustomSettings;
+use CustomSettings\Exception\ForbiddenDeleteException;
 use CustomSettings\Model\Entity\CustomSetting;
 use CustomSettings\SettingTypes\TypeFactory;
 use InvalidArgumentException;
@@ -96,7 +97,7 @@ class CustomSettingsTable extends Table
             throw new InvalidArgumentException('The method "findName" expects to receive "name" in $options array');
         }
         $query->where([$this->aliasField('name') => $options['name']]);
-        $query->find('category', $options);
+        $query->find('byCategory', $options);
 
         return $query;
     }
@@ -139,4 +140,12 @@ class CustomSettingsTable extends Table
             $entity->category = null;
         }
     }
+
+    public function beforeDelete(EventInterface $event, EntityInterface $entity, ArrayObject $options)
+    {
+        if (!$entity->can_delete) {
+            throw new ForbiddenDeleteException('Cannot be deleted if can_delete field is active');
+        }
+    }
+
 }

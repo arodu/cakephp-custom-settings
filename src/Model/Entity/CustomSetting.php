@@ -43,5 +43,6 @@ class CustomSetting extends Entity
         'options' => true,
         'created' => true,
         'modified' => true,
+        'can_delete' => true,
     ];
 }

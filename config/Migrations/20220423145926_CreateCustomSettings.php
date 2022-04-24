@@ -38,6 +38,10 @@ class CreateCustomSettings extends AbstractMigration
             'default' => null,
             'null' => true,
         ]);
+        $table->addColumn('can_delete', 'boolean', [
+            'default' => true,
+            'null' => false,
+        ]);
         $table->addColumn('created', 'datetime', [
             'default' => null,
             'null' => false,

@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace CustomSettings;
 
-use Cake\Collection\Collection;
 use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
+use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use CustomSettings\Exception\DuplicateRegistryException;
 use InvalidArgumentException;
@@ -17,6 +17,12 @@ class CustomSettings
     public const TYPE_BOOLEAN = 'bool';
     public const TYPE_LIST = 'list';
     public const TYPE_JSON = 'json';
+
+    public const RETURN_TYPE_ARRAY = 'all';
+    public const RETURN_TYPE_ENTITY = 'entity';
+    public const RETURN_TYPE_VALUE = 'value';
+    public const RETURN_TYPE_STRING_VALUE = 'string_value';
+    public const RETURN_TYPE_RAW_VALUE = 'raw_value';
 
     protected const DEFAULT_DATA = [
         'category' => null,
@@ -31,7 +37,7 @@ class CustomSettings
      */
     public static function getTypeLabels(): array
     {
-        $list = Configure::read('CustomSettings');
+        $list = Configure::read('CustomSettings.settingTypesMap');
         $output = [];
         foreach ($list as $key => $item) {
             $output[$key] = $item['label'];
@@ -45,7 +51,11 @@ class CustomSettings
      * @param string|null $category
      * @return EntityInterface|array|null
      */
-    public static function read(?string $name = null, ?string $category = null, $getEntity = false): mixed
+    public static function read(
+        ?string $name = null,
+        ?string $category = null,
+        string $returnType = self::RETURN_TYPE_VALUE
+    ): mixed
     {
         if (empty($name)) {
             return static::readAll();
@@ -58,11 +68,18 @@ class CustomSettings
             ])
             ->first();
 
-        if ($getEntity) {
-            return $entity;
+        switch ($returnType) {
+            case self::RETURN_TYPE_ENTITY:
+                return $entity;
+            case self::RETURN_TYPE_ARRAY:
+                return $entity->toArray();
+            case self::RETURN_TYPE_VALUE:
+            case self::RETURN_TYPE_STRING_VALUE:
+            case self::RETURN_TYPE_RAW_VALUE:
+                return $entity->{$returnType};
         }
 
-        return $entity->toArray();
+        throw new NotFoundException();
     }
 
 

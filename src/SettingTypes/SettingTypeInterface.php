@@ -3,6 +3,10 @@ declare(strict_types=1);
 
 namespace CustomSettings\SettingTypes;
 
+
+/**
+ * @property string $name
+ */
 interface SettingTypeInterface
 {
     /**
@@ -34,4 +38,5 @@ interface SettingTypeInterface
      * @return string
      */
     public function stringValue(?string $raw_value): string;
+    
 }

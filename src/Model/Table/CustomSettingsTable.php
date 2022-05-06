@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace CustomSettings\Model\Table;
 
 use ArrayObject;
+use Cake\Core\Configure;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
@@ -48,7 +49,7 @@ class CustomSettingsTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('custom_settings');
+        $this->setTable(Configure::read('CustomSettings.table'));
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 

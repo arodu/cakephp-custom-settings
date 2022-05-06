@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace CustomSettings\SettingTypes;
 
+use CustomSettings\CustomSettings;
 use CustomSettings\Exception\InvalidSettingTypeException;
 
 class StringType extends AbstractSettingType

@@ -20,5 +20,8 @@
             "CustomSettings\\Test\\": "tests/",
             "Cake\\Test\\": "vendor/cakephp/cakephp/tests/"
         }
+    },
+    "scripts": {
+        "tests": "vendor/bin/phpunit"
     }
 }

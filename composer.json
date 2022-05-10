@@ -1,5 +1,5 @@
 {
-    "name": "your-name-here/custom-settings",
+    "name": "arodu/custom-settings",
     "description": "CustomSettings plugin for CakePHP",
     "type": "cakephp-plugin",
     "license": "MIT",
